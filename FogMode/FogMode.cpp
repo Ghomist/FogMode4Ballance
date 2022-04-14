@@ -5,8 +5,13 @@ IMod* BMLEntry(IBML* bml) {
 }
 
 void FogMode::OnLoad() {
-	//GetLogger()->Info("Hello fog mode");
-	//m_bml->RegisterCommand(new FogCommand());
+	GetLogger()->Info("Hello fog mode.");
+	//// TEST ONLY
+	// int len = m_bml->GetModCount();
+	// for (int i = 0; i < len; ++i) {
+	// 	GetLogger()->Info(m_bml->GetMod(i)->GetName());
+	// }
+
 	_render = m_bml->GetRenderContext();
 
 	GetConfig()->SetCategoryComment("Fog", "Fog options.");
@@ -40,7 +45,6 @@ void FogMode::OnLoad() {
 	color_dict["red"] = "#FF0000";
 	color_dict["white"] = "#FFFFFF";
 	color_dict["yellow"] = "#FFFF00";
-
 }
 
 void FogMode::OnLoadObject(CKSTRING filename, BOOL isMap, CKSTRING masterName,
@@ -49,7 +53,11 @@ void FogMode::OnLoadObject(CKSTRING filename, BOOL isMap, CKSTRING masterName,
 }
 
 void FogMode::OnStartLevel() {
-	//m_bml->GetTextureByName("Particle_Flames")->SetDesiredVideoFormat(_32_RGB888);
+	for (auto& name : transp_tex) {
+		CKTexture* tex = m_bml->GetTextureByName(name.c_str());
+		if (tex != nullptr) tex->SetTransparent(true);
+	}
+
 	UpdateFog();
 }
 
@@ -57,7 +65,7 @@ void FogMode::OnProcess() {
 	if (m_bml->IsPlaying()) {
 		CKTargetCamera* cam = m_bml->GetTargetCameraByName("InGameCam");
 		if (cam != nullptr)
-			cam->SetBackPlane(_enable ? fog_end->GetFloat() + 10.0f : 1200.0f);
+			cam->SetBackPlane(_enable ? fog_end->GetFloat() + 12.0f : 1200.0f);
 	}
 }
 
@@ -88,6 +96,7 @@ void FogMode::UpdateFog() {
 			sscanf_s(_str.c_str(), "%d,%d,%d", &r, &g, &b);
 		}
 
+		color = ColorSetAlpha(color, 255);
 		color = ColorSetRed(color, r);
 		color = ColorSetGreen(color, g);
 		color = ColorSetBlue(color, b);

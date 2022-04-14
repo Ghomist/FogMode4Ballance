@@ -15,7 +15,7 @@ public:
 	virtual CKSTRING GetVersion() override { return BML_VERSION; }
 	virtual CKSTRING GetName() override { return "Fog mode"; }
 	virtual CKSTRING GetAuthor() override { return "Ghomist"; }
-	virtual CKSTRING GetDescription() override { return "Try to play Ballance in dark fog?"; }
+	virtual CKSTRING GetDescription() override { return "Try to play Ballance in the thick fog?"; }
 	DECLARE_BML_VERSION;
 	virtual void OnLoad();
 	virtual void OnProcess();
@@ -37,4 +37,9 @@ private:
 	bool _enable;
 	CKDWORD color = 0;
 	std::map<std::string, std::string> color_dict;
+	std::vector<std::string> transp_tex = {
+		"P_Extra_Life_Shadow", "P_Extra_Life_Oil", "P_Extra_Life_Particle", // Life ball
+		"FloorGlow", "ExtraParticle",										// Extra points
+		"Particle_Flames",													// Flames
+	};
 };
