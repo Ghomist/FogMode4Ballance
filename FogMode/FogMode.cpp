@@ -6,11 +6,6 @@ IMod* BMLEntry(IBML* bml) {
 
 void FogMode::OnLoad() {
 	GetLogger()->Info("Hello fog mode.");
-	//// TEST ONLY
-	// int len = m_bml->GetModCount();
-	// for (int i = 0; i < len; ++i) {
-	// 	GetLogger()->Info(m_bml->GetMod(i)->GetName());
-	// }
 
 	_render = m_bml->GetRenderContext();
 
@@ -45,6 +40,8 @@ void FogMode::OnLoad() {
 	color_dict["red"] = "#FF0000";
 	color_dict["white"] = "#FFFFFF";
 	color_dict["yellow"] = "#FFFF00";
+
+	_enable = fog_enable->GetBoolean();
 }
 
 void FogMode::OnLoadObject(CKSTRING filename, BOOL isMap, CKSTRING masterName,
@@ -53,12 +50,27 @@ void FogMode::OnLoadObject(CKSTRING filename, BOOL isMap, CKSTRING masterName,
 }
 
 void FogMode::OnStartLevel() {
-	for (auto& name : transp_tex) {
-		CKTexture* tex = m_bml->GetTextureByName(name.c_str());
-		if (tex != nullptr) tex->SetTransparent(true);
-	}
-
+	if (_enable)
+		for (auto& name : transp_tex) {
+			CKTexture* tex = m_bml->GetTextureByName(name.c_str());
+			if (tex != nullptr) {
+				tex->SetTransparent(true);
+				//for (int i = 0; i < tex->GetWidth(); ++i) {
+					//for (int j = 0; j < tex->GetHeight(); ++j) {
+						//CKDWORD _c = tex->GetPixel(i, j, 0);
+						//_c = ColorSetRed(_c, ColorGetRed(_c) - ColorGetRed(color));
+						//_c = ColorSetBlue(_c, ColorGetBlue(_c) - ColorGetBlue(color));
+						//_c = ColorSetGreen(_c, ColorGetGreen(_c) - ColorGetGreen(color));
+						//tex->SetPixel(i, j, 0, -1); // Black
+					//}
+				//}
+			}
+		}
 	UpdateFog();
+}
+
+void FogMode::OnPostExitLevel() {
+	_render->SetFogMode(VXFOG_NONE);
 }
 
 void FogMode::OnProcess() {
@@ -70,7 +82,8 @@ void FogMode::OnProcess() {
 }
 
 void FogMode::OnModifyConfig(CKSTRING category, CKSTRING key, IProperty* prop) {
-	UpdateFog();
+	if (m_bml->IsIngame())
+		UpdateFog();
 }
 
 void FogMode::UpdateFog() {
@@ -79,16 +92,16 @@ void FogMode::UpdateFog() {
 		int r = 0, g = 0, b = 0;
 
 		std::string _str = fog_color->GetString();
-		if (_str[0] == '#') {
-			// Hex
-			_str.append("000000");
-			sscanf_s(_str.c_str(), "#%02x%02x%02x", &r, &g, &b);
-		}
-		else if (color_dict.find(_str) != color_dict.end()) {
+		if (color_dict.find(_str) != color_dict.end()) {
 			// In dict
 			_str = color_dict[_str];
 			sscanf_s(_str.c_str(), "#%02x%02x%02x", &r, &g, &b);
 			//fog_color->SetString(_str.c_str());
+		}
+		else if (_str[0] == '#') {
+			// Hex
+			_str.append("000000");
+			sscanf_s(_str.c_str(), "#%02x%02x%02x", &r, &g, &b);
 		}
 		else {
 			// Other

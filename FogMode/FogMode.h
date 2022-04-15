@@ -20,6 +20,7 @@ public:
 	virtual void OnLoad();
 	virtual void OnProcess();
 	virtual void OnStartLevel();
+	virtual void OnPostExitLevel();
 	virtual void OnModifyConfig(CKSTRING category, CKSTRING key, IProperty* prop);
 	virtual void OnLoadObject(CKSTRING filename, BOOL isMap, CKSTRING masterName,
 		CK_CLASSID filterClass, BOOL addtoscene, BOOL reuseMeshes, BOOL reuseMaterials,
@@ -41,5 +42,6 @@ private:
 		"P_Extra_Life_Shadow", "P_Extra_Life_Oil", "P_Extra_Life_Particle", // Life ball
 		"FloorGlow", "ExtraParticle",										// Extra points
 		"Particle_Flames",													// Flames
+		"Particle_Smoke"													// Player spawn smoke
 	};
 };
