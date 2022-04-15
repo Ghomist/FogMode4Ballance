@@ -1,6 +1,6 @@
 # Fog Mode for Ballance
 
-这是一个用于 [Ballance](https://ballance.jxpxxzj.cn) 的 Mod，能够给 Ballance 添加线性雾效，增大难度，~丰富游戏性~
+这是一个用于 [Ballance](https://ballance.jxpxxzj.cn) 的 Mod，能够给 Ballance 添加线性雾效，增大难度，提供全新的游戏体验，~ 丰富游戏性和趣味性 ~
 
 ![白雾](./pics/White_fog.jpg)
 
